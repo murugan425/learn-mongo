@@ -19,6 +19,7 @@ import static com.mongodb.client.model.Filters.*;
 import static tamil.learn.mongo.javamongobasic.utilities.PrintDocument.printJson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Week2Assignment6 {
@@ -29,6 +30,10 @@ public class Week2Assignment6 {
 		MongoCollection<Document> docCollection = db.getCollection("movieDetails");
 		Bson filters = and(eq("countries.1", "Sweden"));
 		Bson projections = include("title","countries");
+		//Bson filters = all("genres", Arrays.asList("Comedy","Crime"));	
+		//Bson filters = eq("genres",Arrays.asList("Comedy","Crime"));
+		//Bson filters = and(eq("genres.0", "Comedy"), ("genres", Arrays.asList("Comedy", "Crime")));
+		//Bson projections = include("title","genres");
 		List<Document> docList = docCollection.find(filters).projection(projections).into(new ArrayList<Document>());
 		
 		for (Document doc: docList) {
