@@ -1,10 +1,12 @@
 var express = require('express'),
     app = express(),
     engines = require('consolidate');
+    bodyParser = require('body-parser');
 
 app.engine('html', engines.nunjucks); //nunjucks is a templating engine that will be used in this example
 app.set('view engine', 'html'); //use this engine to render html files
 app.set('views', __dirname + '/views'); //define where the template files are stored
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 app.get('/', function(req, res) {
     res.render('hello_template', { name : 'Murugan' }); //Use render to bind the value of attribute to the template
@@ -24,6 +26,20 @@ app.get('/:firstname/:lastname', function(req, res, next) {
     var userheight = req.query.height;
     console.log(lname);
     res.render('helloreqvar_template', { user : reqname, param1 : userage, param2 : userheight });
+});
+
+app.get('/list/all/furits', function(req, res, next) {
+    res.render('fruitslist_template', { 'fruits' : [ 'apple', 'orange', 'banana', 'peach' ] });
+});
+
+app.post('/favorite_fruit', function(req, res, next) {
+    var favorite = req.body.fruit;
+    if (typeof favorite == 'undefined') {
+        next(Error('Please choose a fruit!'));
+    }
+    else {
+        res.send("Your favorite fruit is " + favorite);
+    }
 });
 
 app.use(errorHandler);
