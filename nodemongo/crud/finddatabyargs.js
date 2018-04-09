@@ -12,7 +12,7 @@ MongoClient.connect('mongodb://localhost:27017/crunchbase', function(err, db) {
     
     var query = queryDocument(options);
     var projection = {"_id": 0, "name": 1, "founded_year": 1,
-                      "number_of_employees": 1, "crunchbase_url": 1};
+                      "number_of_employees": 1, "crunchbase_url": 1, "ipo.valuation_amount": 1};
 
     var cursor = db.collection('companies').find(query, projection);
     var numMatches = 0;
@@ -20,7 +20,7 @@ MongoClient.connect('mongodb://localhost:27017/crunchbase', function(err, db) {
     cursor.forEach(
         function(doc) {
             numMatches += 1;
-            console.log( doc );
+            //console.log( doc );
         },
         function(err) {
             assert.equal(err, null);
@@ -36,7 +36,7 @@ MongoClient.connect('mongodb://localhost:27017/crunchbase', function(err, db) {
 function queryDocument(options) {
 
     console.log(options);
-    
+    //Field within CURLY braces notation
     var query = {
         "founded_year": {
             "$gte": options.firstYear,
@@ -44,11 +44,20 @@ function queryDocument(options) {
         }//,
         //"number_of_employees" : { "$gte": options.employees }
     };
-
+    //Referencing a field using DOT notation
     if ("employees" in options) {
-        query.number_of_employees = { "$gte": options.employees };
+        //query.number_of_employees = { "$gte": options.employees };
+        query["number_of_employees"] = { "$gte": options.employees };
     }
-        
+    //Using a key in a ARRAY like notation
+    if ("ipo" in options) {
+        if (options.ipo == "yes") {
+            query["ipo.valuation_amount"] = {"$exists": true, "$ne": null};
+        } else if (options.ipo == "no") {
+            query["ipo.valuation_amount"] = null;
+        }               
+    }
+
     return query;
     
 }
@@ -59,7 +68,8 @@ function commandLineOptions() {
     var cli = commandLineArgs([
         { name: "firstYear", alias: "f", type: Number },
         { name: "lastYear", alias: "l", type: Number },
-        { name: "employees", alias: "e", type: Number }
+        { name: "employees", alias: "e", type: Number },
+        { name: "ipo", alias: "i", type: String }
     ]);    
     var options = cli.parse()
     if ( !(("firstYear" in options) && ("lastYear" in options))) {
