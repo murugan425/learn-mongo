@@ -12,7 +12,8 @@ MongoClient.connect('mongodb://localhost:27017/crunchbase', function(err, db) {
     
     var query = queryDocument(options);
     var projection = {"_id": 0, "name": 1, "founded_year": 1,
-                      "number_of_employees": 1, "crunchbase_url": 1, "ipo.valuation_amount": 1};
+                      "number_of_employees": 1, "crunchbase_url": 1, 
+                      "ipo.valuation_amount": 1, "offices.country_code": 1};
 
     var cursor = db.collection('companies').find(query, projection);
     var numMatches = 0;
@@ -20,10 +21,11 @@ MongoClient.connect('mongodb://localhost:27017/crunchbase', function(err, db) {
     cursor.forEach(
         function(doc) {
             numMatches += 1;
-            //console.log( doc );
+            console.log( doc );
         },
         function(err) {
             assert.equal(err, null);
+            console.log("Command Options:"+ JSON.stringify(options));
             console.log("Our query was:" + JSON.stringify(query));
             console.log("Matching documents: " + numMatches);
             return db.close();
@@ -35,7 +37,6 @@ MongoClient.connect('mongodb://localhost:27017/crunchbase', function(err, db) {
 
 function queryDocument(options) {
 
-    console.log(options);
     //Field within CURLY braces notation
     var query = {
         "founded_year": {
@@ -58,6 +59,10 @@ function queryDocument(options) {
         }               
     }
 
+    if ("country" in options) {
+        query["offices.country_code"] = options.country;
+    }
+
     return query;
     
 }
@@ -69,7 +74,8 @@ function commandLineOptions() {
         { name: "firstYear", alias: "f", type: Number },
         { name: "lastYear", alias: "l", type: Number },
         { name: "employees", alias: "e", type: Number },
-        { name: "ipo", alias: "i", type: String }
+        { name: "ipo", alias: "i", type: String },
+        { name: "country", alias: "c", type: String }
     ]);    
     var options = cli.parse()
     if ( !(("firstYear" in options) && ("lastYear" in options))) {
