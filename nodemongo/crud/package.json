@@ -4,6 +4,7 @@
     "description": "install the required packages for nodejs - monogo integration",
     "main": "app.js",
     "dependencies": {
+        "command-line-args": "~2.1.4",
         "consolidate": "~0.13.1",
         "express": "^4.16.1",
         "mongodb": "~2.1.3",
