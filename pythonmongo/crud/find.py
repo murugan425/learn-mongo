@@ -9,11 +9,11 @@ connection = pymongo.MongoClient("mongodb://localhost") #default port:27017 is u
 # get a handle to the school database
 db = connection.school
 scores = db.scores
-print "python, reporting for duty"
+print ("python, reporting for duty")
 
 def find():
 
-    print "find(), reporting for duty"
+    print ("find(), reporting for duty")
 
     query = {'type': 'exam'}
 
@@ -21,11 +21,11 @@ def find():
         cursor = scores.find(query)
 
     except Exception as e:
-        print "Unexpected error:", type(e), e
+        print ("Unexpected error:", type(e), e)
 
     sanity = 0
     for doc in cursor:
-        print doc
+        print (doc)
         sanity += 1
         if (sanity > 50):
             break
@@ -33,14 +33,14 @@ def find():
 
 def find_one():
 
-    print "find_one(), reporting for duty"
+    print ("find_one(), reporting for duty")
     query = {'student_id': 10}
     
     try:
         doc = scores.find_one(query)
         
     except Exception as e:
-        print "Unexpected error:", type(e), e
+        print ("Unexpected error:", type(e), e)
     
     print doc
 
