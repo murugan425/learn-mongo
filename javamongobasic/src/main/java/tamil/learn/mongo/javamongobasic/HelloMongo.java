@@ -38,10 +38,10 @@ public class HelloMongo {
 		MongoClientOptions clientOptions = MongoClientOptions.builder().connectTimeout(10000).build();
 		MongoClient client4 = new MongoClient(new ServerAddress("localhost", 27017), clientOptions);
 		
-		client4.listDatabaseNames().iterator().forEachRemaining(dbName -> logger.info(dbName));
+		client4.listDatabaseNames().iterator().forEachRemaining(dbName -> logger.info("DB Names: "+ dbName));
 
 		MongoDatabase db = client4.getDatabase("test");
-		db.listCollectionNames().iterator().forEachRemaining(collectionName -> logger.info(collectionName));
+		db.listCollectionNames().iterator().forEachRemaining(collectionName -> logger.info("Test DB Collection: "+ collectionName));
 		
 		client4.listDatabaseNames().iterator().forEachRemaining(
 			dbName -> {logger.info("\n===============\nDB: " + dbName);
