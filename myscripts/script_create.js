@@ -23,7 +23,7 @@ collection.insert(doc)
 doc = {name:"Apple", "color": "Red", shape: "Round"}
 collection.insert(doc)
 
-//SAVE
+//SAVE - Updates existing or Inserts new doc
 doc = {name:"Orange", "color": "Orange", shape: "Round"}
 collection.save(doc, {w:0, j:true, wtimeout: 10})
 
@@ -58,6 +58,7 @@ collection.update({age:{$gt: 25}}, {$set:{adults: true}}, {upsert: true, multi:t
 
 collection.find({name:"User5"})
 
+//FindAndModify
 collection.findAndModify({query: {name:"User4"}, update:{$set:{age: 55}}, new:true});
 
 collection.find({name:"User4"})
@@ -67,4 +68,3 @@ collection.findAndModify({query: {name:"User4"}, update:{$set:{age: 60}}, fields
 collection.find({name:"User4"})
 
 collection.findAndModify({query: {name:"User4"}, remove:true});
-
